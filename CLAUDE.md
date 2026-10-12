@@ -36,7 +36,7 @@ Version lives in two places that must be bumped together: `version.php` (the run
 
 - `src/Kit.php` is loaded by whichever plugin includes it first, even if a newer copy later wins the autoloader. Its public API must stay backwards compatible forever; never remove or change the signature of a `Kit` method.
 - Consumers must do all kit work inside `Kit::on_ready()` — nothing in `Gnnpls\WP` is autoloadable before boot.
-- A copy registered after `plugins_loaded` has already fired (or outside WordPress) boots immediately; the first `register()` decides the boot timing, later copies only join the version race if boot hasn't happened yet.
+- A copy registered after `plugins_loaded` has already fired boots immediately. A copy registered before `wp-includes/plugin.php` exists (Composer `autoload.files` run from `wp-config.php` — Bedrock root installs, every WP-CLI command) pre-seeds `$wp_filter['plugins_loaded'][-100]` instead of booting: never treat a missing `add_action()` as "too late" (0.3.2). The first `register()` decides the boot timing; later copies only join the version race if boot hasn't happened yet.
 
 ### Declaration → execution → projection
 
