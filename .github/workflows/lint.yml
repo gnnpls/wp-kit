@@ -1,0 +1,26 @@
+# Syntax-check every tracked PHP file and validate composer.json on the
+# lowest and highest supported PHP versions.
+name: lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['7.4', '8.3']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer
+          coverage: none
+      - name: PHP syntax
+        run: git ls-files -z -- '*.php' | xargs -0 -n1 php -l > /dev/null
+      - name: composer.json
+        run: composer validate --strict --no-check-lock
