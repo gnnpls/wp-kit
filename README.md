@@ -103,6 +103,19 @@ The reason travels into `Inventory::export()` so parity tests can tell a
 deliberate omission from a missing registration. Both accept a callable for
 decisions that depend on runtime state.
 
+### MCP
+
+Every ability the kit registers carries `meta.mcp.public = true`, so any MCP
+server built on [`wordpress/mcp-adapter`](https://github.com/WordPress/mcp-adapter)
+(its default server, Agent Connector, …) lists it as a tool with the field
+schema and the read/write/destructive annotations. The kit ships no MCP server
+and no dependency; the tool call runs the ability, so capability and
+`confirm` checks apply unchanged. Keep a resource off MCP with:
+
+```php
+public function mcp() { return false; }
+```
+
 ## What one field becomes
 
 | `Field::int('limit')->default_value(50)->max(200)` | Output |

@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-10-13
+
+Prompt: expose wp-kit consumers (EWP, Filox) to MCP clients at once — "go ahead with the mcp.public change", after comparing an own MCP server with Agent Connector.
+
+### Added
+- Abilities registered by `Ability_Adapter` now carry `meta.mcp.public` (and `meta.mcp.type = 'tool'`), so MCP servers built on `wordpress/mcp-adapter` (its default server, Agent Connector) list them as tools. Input schema and `readonly`/`destructive`/`idempotent` annotations map to the MCP tool as they are.
+- `Resource::mcp()` (default `true`): return `false` to keep a resource's abilities off MCP.
+
+### Backwards compatibility
+- No signature change. Abilities that were not MCP-visible become visible to MCP servers on sites that run one; execution still goes through the ability's own permission and confirm checks. Override `Resource::mcp()` or use `mwp_ability_definitions` to opt out.
+
 ## [0.3.3] - 2026-10-13
 
 Prompt: moving a plugin's remaining legacy REST routes (session-bound handlers, payment webhooks) onto REST-only resources — "proceed to the fix in wp-kit".
