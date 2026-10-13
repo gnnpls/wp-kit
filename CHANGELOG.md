@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.3] - 2026-10-13
+
+Prompt: moving a plugin's remaining legacy REST routes (session-bound handlers, payment webhooks) onto REST-only resources — "proceed to the fix in wp-kit".
+
+### Fixed
+- `Rest_Adapter` no longer overwrites the status of a `WP_REST_Response` the service built itself. A response with any status other than 200 is sent as returned, headers included, so a wrapped handler's `400`/`404`/`422`/`503` (e.g. a payment webhook telling the provider to retry) is no longer turned into the declared success status. A result with status 200 (the `WP_HTTP_Response` default), a plain value, or an array still gets the declared status, so `->rest('POST', '', 201)` behaves as before.
+
+### Backwards compatibility
+- No public API change. Only services that returned a non-200 `WP_REST_Response` see a difference: they now get the status they asked for instead of the declared one.
+
 ## [0.3.2] - 2026-10-12
 
 Prompt: CI jobs failing on `gnnpls/wp-self-test` (same loader pattern) — "does the latest wp-kit code have this fix?" → "please update both repos now".

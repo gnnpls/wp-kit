@@ -141,6 +141,13 @@ Modifiers: `required()`, `default_value()`, `min()`, `max()`, `max_length()`,
    attached as `detail` on the CLI or when `WP_DEBUG` is on.
 7. `apply_filters('mwp_operation_result', $result, $op, $input, $ctx)`
 
+On REST, a `WP_Error` result keeps its own status. Any other result is sent
+with the status declared in `->rest($method, $path, $status)` (default 200),
+unless the service returns a `WP_REST_Response` with a status other than 200:
+that status and its headers are kept (0.3.3). This lets an operation wrap a
+legacy handler that answers `new WP_REST_Response($body, 503)` without
+changing what clients receive.
+
 ## Hooks
 
 | Hook | Kind | Signature |
